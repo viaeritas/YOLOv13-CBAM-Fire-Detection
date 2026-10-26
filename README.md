@@ -34,10 +34,12 @@ We provide the complete, executable model configuration YAML files for all evalu
 ## 🚀 Quick Start
 
 ### Installation
+
 ```bash
 git clone [https://github.com/viaeritas/YOLOv13-CBAM-Fire-Detection.git](https://github.com/viaeritas/YOLOv13-CBAM-Fire-Detection.git)
 cd YOLOv13-CBAM-Fire-Detection
 pip install -r requirements.txt
+```
 
 ## 📝 Citation & Manuscript Status
 
