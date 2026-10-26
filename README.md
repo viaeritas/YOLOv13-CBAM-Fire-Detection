@@ -38,3 +38,15 @@ We provide the complete, executable model configuration YAML files for all evalu
 git clone [https://github.com/viaeritas/YOLOv13-CBAM-Fire-Detection.git](https://github.com/viaeritas/YOLOv13-CBAM-Fire-Detection.git)
 cd YOLOv13-CBAM-Fire-Detection
 pip install -r requirements.txt
+
+## 📝 Citation & Manuscript Status
+
+This codebase accompanies a submitted manuscript currently under peer review.
+
+```bibtex
+@article{dewi2026evaluating,
+  title={Evaluating Attention Mechanism Placement in Contrast-Enhanced You Only Look Once Models for Fire and Smoke Detection},
+  author={Dewi, Christine and Andika, Rio Arya and Santoso, Melati Viaeritas Vitrieco and Md Fauadi, Muhammad Hafidz Fazli and Sutresno, Stephen Aprius and Riantama, Dalianus},
+  journal={Under Review},
+  year={2026}
+}
