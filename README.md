@@ -41,6 +41,8 @@ cd YOLOv13-CBAM-Fire-Detection
 pip install -r requirements.txt
 ```
 
+---
+
 ## 📝 Citation & Manuscript Status
 
 This codebase accompanies a submitted manuscript currently under peer review.
