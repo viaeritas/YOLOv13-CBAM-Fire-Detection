@@ -1,0 +1,48 @@
+# YOLOv13s + CBAM in Neck (after each DSC3k2 block in FPN/PAN, scaled for s: width=0.5)
+nc: 80
+scales:
+  n: [0.50, 0.25, 1024]
+  s: [0.50, 0.50, 1024]
+  l: [1.00, 1.00, 512]
+  x: [1.00, 1.50, 512]
+
+backbone:
+  - [-1, 1, Conv, [64, 3, 2]]
+  - [-1, 1, Conv, [128, 3, 2, 1, 2]]
+  - [-1, 2, DSC3k2, [256, False, 0.25]]
+  - [-1, 1, Conv, [256, 3, 2, 1, 4]]
+  - [-1, 2, DSC3k2, [512, False, 0.25]]
+  - [-1, 1, DSConv, [512, 3, 2]]
+  - [-1, 4, A2C2f, [512, True, 4]]
+  - [-1, 1, DSConv, [1024, 3, 2]]
+  - [-1, 4, A2C2f, [1024, True, 1]]
+
+head:
+  - [[4, 6, 8], 2, HyperACE, [512, 8, True, True, 0.5, 1, "both"]]
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]
+  - [9, 1, DownsampleConv, []]
+  - [[6, 9], 1, FullPAD_Tunnel, []]
+  - [[4, 10], 1, FullPAD_Tunnel, []]
+  - [[8, 11], 1, FullPAD_Tunnel, []]
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]
+  - [[-1, 12], 1, Concat, [1]]
+  - [-1, 2, DSC3k2, [512, True]]                   # 17: P4 top-down
+  - [-1, 1, CBAM, []]                               # 18: CBAM after P4 top-down
+  - [[-1, 9], 1, FullPAD_Tunnel, []]               # 19: FullPAD(CBAM-P4-td, HyperACE)
+  - [18, 1, nn.Upsample, [None, 2, "nearest"]]     # 20: upsample CBAM-P4
+  - [[-1, 13], 1, Concat, [1]]                      # 21
+  - [-1, 2, DSC3k2, [256, True]]                    # 22: P3 top-down
+  - [-1, 1, CBAM, []]                               # 23: CBAM after P3 top-down
+  - [10, 1, Conv, [256, 1, 1]]                      # 24
+  - [[23, 24], 1, FullPAD_Tunnel, []]               # 25: P3 output
+  - [-1, 1, Conv, [256, 3, 2]]                      # 26: downsample P3
+  - [[-1, 19], 1, Concat, [1]]                      # 27
+  - [-1, 2, DSC3k2, [512, True]]                    # 28: P4 bottom-up
+  - [-1, 1, CBAM, []]                               # 29: CBAM after P4 bottom-up
+  - [[-1, 9], 1, FullPAD_Tunnel, []]               # 30: P4 output
+  - [29, 1, Conv, [512, 3, 2]]                      # 31: downsample CBAM-P4
+  - [[-1, 14], 1, Concat, [1]]                      # 32
+  - [-1, 2, DSC3k2, [1024, True]]                   # 33: P5 bottom-up
+  - [-1, 1, CBAM, []]                               # 34: CBAM after P5 bottom-up
+  - [[-1, 11], 1, FullPAD_Tunnel, []]              # 35: P5 output
+  - [[25, 30, 35], 1, Detect, [nc]]
